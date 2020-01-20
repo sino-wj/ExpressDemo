@@ -9,6 +9,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+var fs = require("fs");
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -18,7 +19,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(multer());
+app.use(multer({dest:'/tmp/'}).array('image')); //上传文件中间件--和.netCore注册中间件类同
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
@@ -28,6 +29,7 @@ app.use('/wj',function(req,res){
   res.send("i have a apple");
 });
 
+//get请求
 app.get('/api/getUsers',function(req,res){
     let response = {
       "first_name":req.query.firstName,
@@ -36,6 +38,7 @@ app.get('/api/getUsers',function(req,res){
     res.send(response);
 });
 
+//post请求
 app.post("/api/postUsers",function(req,res){
     let response = {
       "first_name":req.body.first_name,
@@ -43,6 +46,23 @@ app.post("/api/postUsers",function(req,res){
     };
     res.send(JSON.stringify(response));
 });
+
+//上传文件
+app.post('/file_upload',function(req,res){
+  var des_file = __dirname + "/" + req.files[0].originalname;
+  fs.readFile(req.files[0].path,function(err,data){
+    if(err){
+      console.log(err);
+    }else{
+      response = {
+        message:"File uploaded successfully",
+        filename: req.files[0].originalname
+      };
+    }
+    console.log(response);
+    res.send(JSON.stringify(response));
+  })
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
