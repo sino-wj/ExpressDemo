@@ -26,6 +26,14 @@ app.use('/wj',function(req,res){
   res.send("i have a apple");
 });
 
+app.use('/api/getUsers',function(req,res){
+    let response = {
+      "first_name":req.query.firstName,
+      "last_name":req.query.lastName
+    }
+    res.send(response);
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
