@@ -14,7 +14,7 @@ var fs = require("fs");
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 //app.set('view engine', 'jade');
-app.engine('.html',requrie('ejs').__express);
+app.engine('.html',require('ejs').__express);
 app.set('view engine','html');
 
 app.use(logger('dev'));
@@ -64,6 +64,20 @@ app.post('/file_upload',function(req,res){
     console.log(response);
     res.send(JSON.stringify(response));
   })
+})
+
+app.get('/process_get',function(req,res){
+  var response = {
+    "first_name":req.query.first_name,
+    "last_name":req.query.last_name
+  }
+  console.log(response);
+  res.send(JSON.stringify(response));
+})
+
+//访问html方法
+app.get('/Default',function(req,res,next){
+  res.render('Default.html',{title:'Default'});
 })
 
 // catch 404 and forward to error handler
